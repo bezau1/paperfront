@@ -9,6 +9,7 @@ enum ExportError: LocalizedError {
 
 /// Turns the secret layer into standard PDF annotations (highlight + ink) on a
 /// *copy* of the document, so they show up in Apple Books, Preview, Acrobat…
+@MainActor
 enum PDFExporter {
     static func write(document: PDFDocument, annotations: AnnotationStore, to url: URL) throws {
         guard let data = document.dataRepresentation(), let copy = PDFDocument(data: data) else { throw ExportError.failed }
