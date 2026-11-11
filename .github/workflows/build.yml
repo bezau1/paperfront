@@ -15,9 +15,15 @@ jobs:
           xcrun --sdk iphonesimulator --show-sdk-version
       - name: Build for iOS Simulator
         run: |
+          set +e
           xcodebuild build \
             -project PaperFront.xcodeproj \
             -scheme PaperFront \
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGNING_ALLOWED=NO > build.log 2>&1
+          status=$?
+          echo "=== ERRORS ==="
+          grep -E "error:" build.log | sort -u | head -80
+          echo "=== exit $status ==="
+          exit $status
