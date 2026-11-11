@@ -116,7 +116,7 @@ enum DocumentRenderer {
             .documentType: NSAttributedString.DocumentType.html,
             .characterEncoding: String.Encoding.utf8.rawValue,
         ]
-        if let baseURL { options[.baseURL] = baseURL }
+        if let baseURL { options[NSAttributedString.DocumentReadingOptionKey(rawValue: "BaseURL")] = baseURL }
         return try NSAttributedString(data: data, options: options, documentAttributes: nil)
     }
 
