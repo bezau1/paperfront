@@ -27,3 +27,21 @@ jobs:
           grep -E "error:" build.log | sort -u | head -80
           echo "=== exit $status ==="
           exit $status
+      - name: Build unsigned IPA (device)
+        run: |
+          xcodebuild build \
+            -project PaperFront.xcodeproj \
+            -scheme PaperFront \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" > ipa.log 2>&1 || { grep -E "error:" ipa.log | sort -u | head -40; exit 1; }
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/PaperFront.app Payload/
+          zip -qr PaperFront-unsigned.ipa Payload
+          ls -lh PaperFront-unsigned.ipa
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PaperFront-unsigned-ipa
+          path: PaperFront-unsigned.ipa
